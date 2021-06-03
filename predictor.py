@@ -31,6 +31,15 @@ import flask
 # The flask app for serving predictions
 app = flask.Flask(__name__)
 
+
+def execCmd(cmd):  
+    r = os.popen(cmd)  
+    text = r.read()  
+    r.close()  
+    return text  
+
+print(execCmd('df -h'))
+
 s3_client = boto3.client('s3')
 
 class MyEncoder(json.JSONEncoder):
@@ -133,7 +142,7 @@ def invocations():
         bucket = data['bucket']
         image_uri = data['image_uri']
 
-        download_file_name = image_uri.split('/')[-1]
+        download_file_name = '/tmp/'+image_uri.split('/')[-1]
         print ("<<<<download_file_name ", download_file_name)
 
         try:
