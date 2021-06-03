@@ -123,7 +123,7 @@ def invocations():
     if flask.request.content_type == 'application/x-image':
         image_as_bytes = io.BytesIO(flask.request.data)
         img = Image.open(image_as_bytes)
-        download_file_name = 'tmp.jpg'
+        download_file_name = '/tmp/tmp.jpg'
         img.save(download_file_name)
         print ("<<<<download_file_name ", download_file_name)
     else:
