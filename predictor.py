@@ -8,6 +8,7 @@ import warnings
 import numpy as np
 from paddleocr import PaddleOCR
 import cv2
+import time
 
 from PIL import Image
 
@@ -159,8 +160,10 @@ def invocations():
     # LOAD MODEL
     label = ''
     try:
+        start = time.time()
         res, img_shape = bbox_main(download_file_name, detect='paddle')
-        print ("Done inference! ")
+        end = time.time()
+        print ("Done inference! ", end-start)
         inference_result = {
             'label': res['label'],
             'confidences': res['confidence'],

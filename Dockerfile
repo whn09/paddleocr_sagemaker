@@ -10,6 +10,7 @@ ENV PATH="/opt/program:${PATH}"
 ##########################################################################################
 # SageMaker requirements
 ##########################################################################################
+RUN pip config set global.index-url https://opentuna.cn/pypi/web/simple/
 RUN pip3.7 install --upgrade pip
 
 ## install flask
@@ -18,7 +19,8 @@ RUN pip3.7 install networkx==2.3 flask gevent gunicorn boto3
 # RUN pip3.7 install paddlepaddle-gpu==2.0.0
 
 #add folder
-RUN git clone https://github.com/PaddlePaddle/PaddleOCR.git /opt/program/
+RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR.git /opt/program/
+# RUN git clone https://github.com/PaddlePaddle/PaddleOCR.git /opt/program/
 
 #download model
 RUN mkdir /opt/program/inference/
@@ -27,7 +29,6 @@ RUN wget -P /opt/program/inference/ https://paddleocr.bj.bcebos.com/dygraph_v2.0
 RUN wget -P /opt/program/inference/ https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar && tar -xf /opt/program/inference/ch_ppocr_mobile_v2.0_cls_infer.tar -C /opt/program/inference/ && rm -rf /opt/program/inference/ch_ppocr_mobile_v2.0_cls_infer.tar
 RUN wget -P /opt/program/inference/ https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_server_v2.0_rec_infer.tar && tar -xf /opt/program/inference/ch_ppocr_server_v2.0_rec_infer.tar -C /opt/program/inference/ && rm -rf /opt/program/inference/ch_ppocr_server_v2.0_rec_infer.tar
 
-# RUN pip3.7 install -r /opt/program/requirements.txt -i https://opentuna.cn/pypi/web/simple/
 RUN pip3.7 install -r /opt/program/requirements.txt
 
 ### Install nginx notebook
