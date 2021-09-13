@@ -1,4 +1,6 @@
-FROM paddlepaddle/paddle:2.0.0rc1-gpu-cuda10.1-cudnn7
+# FROM paddlepaddle/paddle:2.0.0rc1-gpu-cuda10.1-cudnn7
+# FROM registry.baidubce.com/paddlepaddle/paddle:2.1.2-gpu-cuda11.2-cudnn8
+FROM paddlepaddle/paddle:2.1.2-gpu-cuda11.2-cudnn8
 
 ENV LANG=en_US.utf8
 ENV LANG=C.UTF-8
@@ -10,17 +12,15 @@ ENV PATH="/opt/program:${PATH}"
 ##########################################################################################
 # SageMaker requirements
 ##########################################################################################
-RUN pip config set global.index-url https://opentuna.cn/pypi/web/simple/
+# RUN pip config set global.index-url https://opentuna.cn/pypi/web/simple/
 RUN pip3.7 install --upgrade pip
 
 ## install flask
 RUN pip3.7 install networkx==2.3 flask gevent gunicorn boto3
 
-# RUN pip3.7 install paddlepaddle-gpu==2.0.0
-
 #add folder
-RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR.git /opt/program/
-# RUN git clone https://github.com/PaddlePaddle/PaddleOCR.git /opt/program/
+# RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR.git /opt/program/
+RUN git clone https://github.com/PaddlePaddle/PaddleOCR.git /opt/program/
 
 #download model
 RUN mkdir /opt/program/inference/

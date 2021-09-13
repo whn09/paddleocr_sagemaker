@@ -33,13 +33,13 @@ import flask
 app = flask.Flask(__name__)
 
 
-def execCmd(cmd):  
-    r = os.popen(cmd)  
-    text = r.read()  
-    r.close()  
-    return text  
+# def execCmd(cmd):  
+#     r = os.popen(cmd)  
+#     text = r.read()  
+#     r.close()  
+#     return text  
 
-print(execCmd('df -h'))
+# print(execCmd('df -h'))
 
 s3_client = boto3.client('s3')
 
@@ -73,19 +73,19 @@ def bbox_main(imgpath, detect='paddle'):
             break
 
     if detect == 'paddle':
-        print ("start!!!!")
+#         print ("start!!!!")
         ocr = PaddleOCR(det_model_dir='/opt/program/inference/ch_ppocr_server_v2.0_det_infer',
                         rec_model_dir='/opt/program/inference/ch_ppocr_server_v2.0_rec_infer',
                         cls_model_dir='/opt/program/inference/ch_ppocr_mobile_v2.0_cls_infer',
                         use_pdserving=False)  # need to run only once to download and load model into memory
-        print ("test!!!!")
+#         print ("test!!!!")
 
         img = cv2.imread(imgpath)
         img_shape = img.shape
-        print('img shape: ', img_shape)
+#         print('img shape: ', img_shape)
 
         result = ocr.ocr(imgpath, rec=True)
-        print (result)
+#         print (result)
 
         # save results
         res2 = {}
@@ -102,7 +102,7 @@ def bbox_main(imgpath, detect='paddle'):
         res2['confidence'] = confidence
         res2['bbox'] = bbox
 
-        print ('<<<< res2', res2)
+#         print ('<<<< res2', res2)
         return res2, img_shape
     else:
         return
@@ -115,7 +115,7 @@ def ping():
     health = 1
 
     status = 200 if health else 404
-    print("===================== PING ===================")
+#     print("===================== PING ===================")
     return flask.Response(response="{'status': 'Healthy'}\n", status=status, mimetype='application/json')
 
 @app.route('/invocations', methods=['POST'])
@@ -128,14 +128,14 @@ def invocations():
     print("================ INVOCATIONS =================")
 
     #parse json in request
-    print ("<<<< flask.request.content_type", flask.request.content_type)
+#     print ("<<<< flask.request.content_type", flask.request.content_type)
     
     if flask.request.content_type == 'application/x-image':
         image_as_bytes = io.BytesIO(flask.request.data)
         img = Image.open(image_as_bytes)
         download_file_name = '/tmp/tmp.jpg'
         img.save(download_file_name)
-        print ("<<<<download_file_name ", download_file_name)
+#         print ("<<<<download_file_name ", download_file_name)
     else:
         data = flask.request.data.decode('utf-8')
         data = json.loads(data)
@@ -144,7 +144,7 @@ def invocations():
         image_uri = data['image_uri']
 
         download_file_name = '/tmp/'+image_uri.split('/')[-1]
-        print ("<<<<download_file_name ", download_file_name)
+#         print ("<<<<download_file_name ", download_file_name)
 
         try:
             s3_client.download_file(bucket, image_uri, download_file_name)
@@ -152,10 +152,10 @@ def invocations():
             #local test
             download_file_name = './1.jpg'
 
-        print('Download finished!')
+#         print('Download finished!')
     # inference and send result to RDS and SQS
 
-    print('Start to inference:')
+#     print('Start to inference:')
 
     # LOAD MODEL
     label = ''
@@ -163,7 +163,7 @@ def invocations():
         start = time.time()
         res, img_shape = bbox_main(download_file_name, detect='paddle')
         end = time.time()
-        print ("Done inference! ", end-start)
+#         print ("Done inference! ", end-start)
         inference_result = {
             'label': res['label'],
             'confidences': res['confidence'],

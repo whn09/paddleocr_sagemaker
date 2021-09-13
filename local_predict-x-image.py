@@ -1,5 +1,5 @@
 # locally
-# docker run -v -d -p 8080:8080 paddleocr
+# nvidia-docker run -v -d -p 8080:8080 paddleocr
 import requests
 import json
 from io import BytesIO

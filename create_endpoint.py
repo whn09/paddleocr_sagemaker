@@ -72,19 +72,25 @@ def deploy_endpoint():
         primary_container = {'Image': args.endpoint_ecr_image_path}
         print("model_name: ", args.endpoint_name)
         print("endpoint_ecr_image_path: ", args.endpoint_ecr_image_path)
-        create_model_response = sm.create_model(ModelName=args.endpoint_name,
-                                                ExecutionRoleArn=role,
-                                                PrimaryContainer=primary_container)
+        try:
+            create_model_response = sm.create_model(ModelName=args.endpoint_name,
+                                                    ExecutionRoleArn=role,
+                                                    PrimaryContainer=primary_container)
+        except:
+            print('Model existed.')
 
         # create endpoint config
         endpoint_config_name = args.endpoint_name + '-config'
-        create_endpoint_config_response = sm.create_endpoint_config(EndpointConfigName=endpoint_config_name,
-                                                                    ProductionVariants=[{
-                                                                        'InstanceType': args.instance_type,
-                                                                        'InitialVariantWeight': 1,
-                                                                        'InitialInstanceCount': 1,
-                                                                        'ModelName': args.endpoint_name,
-                                                                        'VariantName': 'AllTraffic'}])
+        try:
+            create_endpoint_config_response = sm.create_endpoint_config(EndpointConfigName=endpoint_config_name,
+                                                                        ProductionVariants=[{
+                                                                            'InstanceType': args.instance_type,
+                                                                            'InitialVariantWeight': 1,
+                                                                            'InitialInstanceCount': 1,
+                                                                            'ModelName': args.endpoint_name,
+                                                                            'VariantName': 'AllTraffic'}])
+        except:
+            print('Endpoint config existed.')
 
         # create endpoint
         create_endpoint_response = sm.create_endpoint(
